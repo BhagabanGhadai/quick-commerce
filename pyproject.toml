@@ -19,6 +19,8 @@ ignore_decorators = ["@app.*", "@router.*"]
 # Pydantic fields are read at runtime (by FastAPI or pydantic-settings), so they
 # look unused too.
 exclude = ["*/schemas.py", "core/config.py"]
+# Shared types used only inside the excluded schemas files.
+ignore_names = ["SafeStr"]
 min_confidence = 60
 
 [tool.commitizen]

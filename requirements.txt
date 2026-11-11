@@ -25,6 +25,7 @@ Jinja2==3.1.6
 markdown-it-py==4.3.0
 MarkupSafe==3.0.4
 mdurl==0.1.2
+nh3==0.3.7
 nodeenv==1.12.0
 opentelemetry-api==1.45.2
 packaging==26.3
@@ -32,8 +33,8 @@ platformdirs==4.14.5
 pluggy==1.7.0
 pre_commit==4.7.0
 prompt_toolkit==3.0.53
-pydantic==2.14.3
 pydantic-settings==2.16.2
+pydantic==2.14.3
 pydantic_core==2.50.4
 Pygments==2.21.0
 pytest==9.2.0
