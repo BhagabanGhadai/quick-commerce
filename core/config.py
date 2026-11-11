@@ -10,6 +10,7 @@ class Settings(BaseSettings):
 
     app_name: str = "Quick Commerce API"
     debug: bool = False
+    log_level: str = "INFO"
     database_url: str  # no default, so the app fails at startup if it's missing
     # Frontends allowed to call the API. Set in .env as a JSON list, e.g.
     # CORS_ORIGINS='["https://shop.example.com"]'

@@ -1,14 +1,21 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.gzip import GZipMiddleware
 
 from apps import orders, products
 from core.config import get_settings
 from core.exceptions import register_exception_handlers
+from core.logging_config import RequestLoggingMiddleware, setup_logging
 
 settings = get_settings()
+setup_logging(settings.log_level)
 
 app = FastAPI(title=settings.app_name, debug=settings.debug)
 
+# Middleware added last runs first, so CORS wraps everything (error responses
+# still get CORS headers) and the logger times the whole request.
+app.add_middleware(GZipMiddleware, minimum_size=1000)  # skip tiny responses
+app.add_middleware(RequestLoggingMiddleware)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origins,

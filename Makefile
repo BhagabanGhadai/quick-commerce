@@ -8,7 +8,7 @@ setup:
 	$(VENV)/pre-commit install
 
 start:
-	$(VENV)/uvicorn main:app --reload
+	$(VENV)/uvicorn main:app --reload --no-access-log
 
 lint:
 	$(VENV)/ruff check .
