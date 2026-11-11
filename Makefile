@@ -1,6 +1,6 @@
 VENV := .venv/bin
 
-.PHONY: setup start lint format deadcode check
+.PHONY: setup start lint format deadcode imports test check
 
 # One-time setup: install dev tools and git hooks
 setup:
@@ -20,8 +20,16 @@ format:
 deadcode:
 	$(VENV)/vulture
 
+# Check module boundaries (rules live in pyproject.toml)
+imports:
+	$(VENV)/lint-imports
+
+test:
+	$(VENV)/pytest
+
 # Same checks the pre-commit hook runs, on all files
 check:
 	$(VENV)/ruff check .
 	$(VENV)/ruff format --check .
 	$(VENV)/vulture
+	$(VENV)/lint-imports

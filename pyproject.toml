@@ -13,7 +13,7 @@ extend-exclude = ["node_modules"]
 select = ["E", "F", "I", "UP", "B"]
 
 [tool.vulture]
-paths = ["main.py", "apps"]
+paths = ["main.py", "core", "apps"]
 # FastAPI calls route handlers itself, so they look unused to vulture.
 ignore_decorators = ["@app.*", "@router.*"]
 # Pydantic fields are read by FastAPI at runtime, so they look unused too.
@@ -22,3 +22,34 @@ min_confidence = 60
 
 [tool.commitizen]
 name = "cz_conventional_commits"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+
+# Module boundaries. Run with `make imports` (also runs on commit).
+[tool.importlinter]
+root_packages = ["core", "apps"]
+
+[[tool.importlinter.contracts]]
+name = "core must not depend on apps"
+type = "forbidden"
+source_modules = ["core"]
+forbidden_modules = ["apps"]
+
+[[tool.importlinter.contracts]]
+name = "products internals are private"
+type = "protected"
+protected_modules = ["apps.products.*"]
+allowed_importers = ["apps.products"]
+
+[[tool.importlinter.contracts]]
+name = "orders internals are private"
+type = "protected"
+protected_modules = ["apps.orders.*"]
+allowed_importers = ["apps.orders"]
+
+[[tool.importlinter.contracts]]
+name = "no circular imports between apps"
+type = "acyclic_siblings"
+ancestors = ["apps"]

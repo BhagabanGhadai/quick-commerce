@@ -1,10 +1,15 @@
 from fastapi import FastAPI
 
-from apps.products.router import router as products_router
+from apps import orders, products
+from core.exceptions import register_exception_handlers
 
 app = FastAPI(title="Quick Commerce API")
 
-app.include_router(products_router)
+register_exception_handlers(app)
+
+# Each module exposes one router through its public interface.
+for module in (products, orders):
+    app.include_router(module.router)
 
 
 @app.get("/health")

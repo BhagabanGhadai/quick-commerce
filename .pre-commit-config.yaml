@@ -25,6 +25,13 @@ repos:
         types: [python]
         pass_filenames: false
 
+      - id: import-linter
+        name: import-linter (module boundaries)
+        entry: .venv/bin/lint-imports
+        language: system
+        types: [python]
+        pass_filenames: false
+
       - id: commitizen
         name: commitizen (commit message)
         entry: .venv/bin/cz check --commit-msg-file
