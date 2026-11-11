@@ -12,6 +12,7 @@ class Settings(BaseSettings):
     debug: bool = False
     log_level: str = "INFO"
     request_timeout_seconds: float = 30
+    max_body_bytes: int = 1_000_000  # 1 MB is plenty for JSON
     database_url: str  # no default, so the app fails at startup if it's missing
     # Frontends allowed to call the API. Set in .env as a JSON list, e.g.
     # CORS_ORIGINS='["https://shop.example.com"]'

@@ -1,6 +1,6 @@
 import pytest
 
-from core.security_headers import SECURITY_HEADERS
+from core.security_headers import DOCS_CSP, SECURITY_HEADERS
 
 
 @pytest.mark.parametrize(
@@ -24,3 +24,9 @@ def test_security_headers_on_every_response(client, method, path, headers):
 
     for name, value in SECURITY_HEADERS.items():
         assert response.headers[name] == value
+
+
+def test_docs_get_a_csp_that_allows_swagger_ui(client):
+    response = client.get("/docs")
+
+    assert response.headers["Content-Security-Policy"] == DOCS_CSP

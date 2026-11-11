@@ -2,22 +2,29 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from apps import orders, products
+from core.body_limit import BodySizeLimitMiddleware
 from core.compression import CompressionMiddleware
 from core.config import get_settings
 from core.exceptions import register_exception_handlers
 from core.hpp import HPPMiddleware
 from core.logging_config import RequestLoggingMiddleware, setup_logging
+from core.responses import SafeJSONResponse
 from core.security_headers import SecurityHeadersMiddleware
 from core.timeout import TimeoutMiddleware
 
 settings = get_settings()
 setup_logging(settings.log_level)
 
-app = FastAPI(title=settings.app_name, debug=settings.debug)
+app = FastAPI(
+    title=settings.app_name,
+    debug=settings.debug,
+    default_response_class=SafeJSONResponse,  # escapes <, >, & in all JSON
+)
 
 # Middleware added last runs first (outermost). Read bottom-up for request order.
 app.add_middleware(HPPMiddleware)  # pass allow_lists=[...] for real list params
 app.add_middleware(TimeoutMiddleware, seconds=settings.request_timeout_seconds)
+app.add_middleware(BodySizeLimitMiddleware, max_bytes=settings.max_body_bytes)
 # Never compress routes that return tokens (see core/compression.py).
 app.add_middleware(CompressionMiddleware, excluded_paths=["/auth"])
 app.add_middleware(RequestLoggingMiddleware)  # also logs timeouts as 504
