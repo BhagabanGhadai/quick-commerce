@@ -16,8 +16,9 @@ select = ["E", "F", "I", "UP", "B"]
 paths = ["main.py", "core", "apps"]
 # FastAPI calls route handlers itself, so they look unused to vulture.
 ignore_decorators = ["@app.*", "@router.*"]
-# Pydantic fields are read by FastAPI at runtime, so they look unused too.
-exclude = ["*/schemas.py"]
+# Pydantic fields are read at runtime (by FastAPI or pydantic-settings), so they
+# look unused too.
+exclude = ["*/schemas.py", "core/config.py"]
 min_confidence = 60
 
 [tool.commitizen]
