@@ -4,7 +4,7 @@ def test_create_and_get_product(client, make_product):
     response = client.get(f"/products/{product['id']}")
 
     assert response.status_code == 200
-    assert response.json() == product
+    assert response.json() == {"success": True, "data": product}
 
 
 def test_get_missing_product_returns_404(client):

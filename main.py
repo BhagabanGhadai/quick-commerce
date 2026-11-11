@@ -9,6 +9,7 @@ from core.exceptions import register_exception_handlers
 from core.hpp import HPPMiddleware
 from core.logging_config import RequestLoggingMiddleware, setup_logging
 from core.responses import SafeJSONResponse
+from core.schemas import ApiResponse
 from core.security_headers import SecurityHeadersMiddleware
 from core.timeout import TimeoutMiddleware
 
@@ -46,6 +47,6 @@ for module in (products, orders):
     app.include_router(module.router)
 
 
-@app.get("/health")
+@app.get("/health", response_model=ApiResponse[dict[str, str]])
 def health():
-    return {"status": "ok"}
+    return ApiResponse(data={"status": "ok"})

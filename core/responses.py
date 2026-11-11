@@ -1,8 +1,11 @@
-"""JSON responses that are safe even if a page puts them inside HTML."""
+"""JSON responses: HTML-safe, and errors in the standard envelope."""
 
+from http import HTTPStatus
 from typing import Any
 
 from fastapi.responses import JSONResponse
+
+from core.schemas import ErrorBody, ErrorDetail, ErrorResponse
 
 
 class SafeJSONResponse(JSONResponse):
@@ -21,3 +24,24 @@ class SafeJSONResponse(JSONResponse):
             .replace(b"<", b"\\u003c")
             .replace(b">", b"\\u003e")
         )
+
+
+def error_response(
+    status_code: int,
+    message: str,
+    code: str | None = None,
+    details: list[ErrorDetail] | None = None,
+    headers: dict[str, str] | None = None,
+) -> SafeJSONResponse:
+    """Build an error in the standard envelope. `code` defaults to the status
+    name, e.g. 404 -> "NOT_FOUND"."""
+    body = ErrorBody(
+        code=code or HTTPStatus(status_code).name,
+        message=message,
+        details=details,
+    )
+    return SafeJSONResponse(
+        status_code=status_code,
+        content=ErrorResponse(error=body).model_dump(exclude_none=True),
+        headers=headers,
+    )

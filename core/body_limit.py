@@ -1,8 +1,9 @@
 """Reject request bodies over a size limit with 413, before they fill memory."""
 
 from fastapi import HTTPException
-from starlette.responses import JSONResponse
 from starlette.types import ASGIApp, Message, Receive, Scope, Send
+
+from core.responses import error_response
 
 
 class BodySizeLimitMiddleware:
@@ -57,5 +58,5 @@ class BodySizeLimitMiddleware:
         return f"Request body too large (max {self.max_bytes} bytes)"
 
     async def _too_large(self, scope: Scope, receive: Receive, send: Send) -> None:
-        response = JSONResponse({"detail": self._detail()}, status_code=413)
+        response = error_response(413, self._detail())
         await response(scope, receive, send)

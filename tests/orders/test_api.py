@@ -14,9 +14,9 @@ def test_place_order_takes_stock(client, make_product):
     )
 
     assert response.status_code == 201
-    assert response.json()["total"] == 11.5
-    assert client.get(f"/products/{milk['id']}").json()["stock"] == 7
-    assert client.get(f"/products/{eggs['id']}").json()["stock"] == 2
+    assert response.json()["data"]["total"] == 11.5
+    assert client.get(f"/products/{milk['id']}").json()["data"]["stock"] == 7
+    assert client.get(f"/products/{eggs['id']}").json()["data"]["stock"] == 2
 
 
 def test_order_fails_without_changing_stock(client, make_product):
@@ -34,7 +34,7 @@ def test_order_fails_without_changing_stock(client, make_product):
     )
 
     assert response.status_code == 409
-    assert client.get(f"/products/{milk['id']}").json()["stock"] == 10
+    assert client.get(f"/products/{milk['id']}").json()["data"]["stock"] == 10
 
 
 def test_order_with_unknown_product_returns_404(client):

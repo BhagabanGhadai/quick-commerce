@@ -5,7 +5,8 @@ def test_json_responses_escape_html_characters(client, make_product):
 
     assert "&" not in response.text
     assert ">" not in response.text
-    assert response.json()["name"] == "Salt & Pepper > Sugar"  # decodes unchanged
+    # Clients still decode the original text.
+    assert response.json()["data"]["name"] == "Salt & Pepper > Sugar"
 
 
 def test_validation_errors_do_not_echo_raw_html(client):

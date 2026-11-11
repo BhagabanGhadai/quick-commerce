@@ -16,6 +16,6 @@ def make_product(client):
             "/products/", json={"name": name, "price": price, "stock": stock}
         )
         assert response.status_code == 201
-        return response.json()
+        return response.json()["data"]
 
     return _make

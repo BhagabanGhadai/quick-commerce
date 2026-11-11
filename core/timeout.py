@@ -3,8 +3,9 @@
 import asyncio
 import logging
 
-from starlette.responses import JSONResponse
 from starlette.types import ASGIApp, Message, Receive, Scope, Send
+
+from core.responses import error_response
 
 logger = logging.getLogger(__name__)
 
@@ -42,5 +43,5 @@ class TimeoutMiddleware:
                 scope["path"],
                 self.seconds,
             )
-            response = JSONResponse({"detail": "Request timed out"}, status_code=504)
+            response = error_response(504, "Request timed out", code="TIMEOUT")
             await response(scope, receive, send)

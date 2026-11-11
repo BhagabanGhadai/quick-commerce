@@ -26,7 +26,10 @@ def test_slow_request_returns_504():
     response = client.get("/slow")
 
     assert response.status_code == 504
-    assert response.json() == {"detail": "Request timed out"}
+    assert response.json() == {
+        "success": False,
+        "error": {"code": "TIMEOUT", "message": "Request timed out"},
+    }
 
 
 def test_fast_request_is_untouched():
