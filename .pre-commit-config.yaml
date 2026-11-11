@@ -1,0 +1,32 @@
+# Installs both hooks with a plain `pre-commit install`
+default_install_hook_types: [pre-commit, commit-msg]
+# Hooks run before commit unless they say otherwise
+default_stages: [pre-commit]
+
+repos:
+  - repo: local
+    hooks:
+      - id: ruff-check
+        name: ruff (lint)
+        entry: .venv/bin/ruff check --force-exclude
+        language: system
+        types: [python]
+
+      - id: ruff-format
+        name: ruff (format)
+        entry: .venv/bin/ruff format --check --force-exclude
+        language: system
+        types: [python]
+
+      - id: vulture
+        name: vulture (unused code)
+        entry: .venv/bin/vulture
+        language: system
+        types: [python]
+        pass_filenames: false
+
+      - id: commitizen
+        name: commitizen (commit message)
+        entry: .venv/bin/cz check --commit-msg-file
+        language: system
+        stages: [commit-msg]
